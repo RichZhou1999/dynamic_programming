@@ -41,7 +41,7 @@ def step(state, action):
     if is_terminal(state):
         # if state[0] == 0:
         #     return state, 0, True
-        return state, -state[0], True
+        return state, -state[0]*10, True
     new_state = [0, 0, 0]
 
     if action == 1:
@@ -108,8 +108,46 @@ def compute_state_value(max_iter=9, discount=1, policy=actions_prob * np.ones(
 
     return new_state_values, iteration
 
+
+
+def greedy_Policy(values,discount = 1):
+    new_state_values = values
+    policy = np.zeros((state_size_delta_soc, state_size_delta_time, state_size_time, action_size))
+
+    state_values = new_state_values.copy()
+
+    for i in np.linspace(0, 1, state_size_delta_soc):
+        for j in range((int(state_size_delta_time))):
+            for m in range(int(state_size_time) - j):
+                i = np.round(i, 1)
+                index_i = get_index(i)
+                value = np.min(values);
+                for k,a in enumerate(actions):
+                    (next_i, next_j, next_m), reward, done = step([i, j, m], a)
+                    next_index_i = get_index(next_i)
+                    valtemp = reward + discount*state_values[next_index_i, next_j, next_m]
+                    if valtemp > value:
+                        value = valtemp
+                        actionind = k
+
+
+                policy[index_i,j,m,actionind] = 1
+
+    return policy
+
 # get_index(0.3)
 # print(int(np.round(0.3/0.1)))
 # print(get_index(0.3))
-values, sync_iteration = compute_state_value(max_iter=50)
-print(values)
+# values, sync_iteration = compute_state_value(max_iter=30)
+# print(values)
+
+
+policy0 = actions_prob * np.ones((state_size_delta_soc, state_size_delta_time, state_size_time, action_size))
+values, sync_iteration = compute_state_value(max_iter=5, policy = policy0)
+greedy_policy = greedy_Policy(values)
+
+values, sync_iteration = compute_state_value(max_iter=5, policy = greedy_policy)
+greedy_policy = greedy_Policy(values)
+values, sync_iteration = compute_state_value(max_iter=5, policy = greedy_policy)
+greedy_policy = greedy_Policy(values)
+print(123)
