@@ -1,4 +1,6 @@
 import numpy as np
+import matplotlib.pyplot as plt
+from tqdm import tqdm
 
 voltage = 240
 battery_volume = 60 * 1000 / voltage #amp
@@ -85,11 +87,17 @@ def compute_state_value(max_iter=9, discount=1, policy=actions_prob * np.ones(
     new_state_values = np.zeros((state_size_delta_soc, state_size_delta_time, state_size_time))
     iteration = 0
 
-    while iteration <= max_iter:
+    # while iteration <= max_iter:
+    # for _ in tqdm(range(max_iter)):
+    for _ in range(max_iter):
         state_values = new_state_values.copy()
         old_state_values = state_values.copy()
 
         for i in np.linspace(0, 1, state_size_delta_soc):
+<<<<<<< Updated upstream
+=======
+            # print(i)
+>>>>>>> Stashed changes
             for j in range(int(state_size_delta_time)):
                 for m in range(int(state_size_time) - j):
                     i = np.round(i, 1)
@@ -105,7 +113,7 @@ def compute_state_value(max_iter=9, discount=1, policy=actions_prob * np.ones(
                                     reward + discount * state_values[next_index_i, next_j, next_m])
                     new_state_values[index_i, j, m] = value
 
-        iteration += 1
+        # iteration += 1
 
     return new_state_values, iteration
 
@@ -142,11 +150,15 @@ def greedy_Policy(values,discount = 1):
 # values, sync_iteration = compute_state_value(max_iter=30)
 # print(values)
 
+num_iteration = 10
+policy = actions_prob * np.ones((state_size_delta_soc, state_size_delta_time, state_size_time, action_size))
+for i in tqdm(range(num_iteration)):
+    values, sync_iteration = compute_state_value(max_iter=10, policy = policy)
+    policy = greedy_Policy(values)
 
-policy0 = actions_prob * np.ones((state_size_delta_soc, state_size_delta_time, state_size_time, action_size))
-values, sync_iteration = compute_state_value(max_iter=5, policy = policy0)
-greedy_policy = greedy_Policy(values)
+np.save(f'greedy_policy_iter{num_iteration}', policy)
 
+<<<<<<< Updated upstream
 values, sync_iteration = compute_state_value(max_iter=5, policy = greedy_policy)
 greedy_policy = greedy_Policy(values)
 values, sync_iteration = compute_state_value(max_iter=5, policy = greedy_policy)
@@ -166,11 +178,25 @@ greedy_policy = greedy_Policy(values)
 # greedy_policy = greedy_Policy(values)
 # values, sync_iteration = compute_state_value(max_iter=5, policy = greedy_policy)
 # greedy_policy = greedy_Policy(values)
+=======
+# policy0 = actions_prob * np.ones((state_size_delta_soc, state_size_delta_time, state_size_time, action_size))
+# values, sync_iteration = compute_state_value(max_iter=5, policy = policy0)
+
+# greedy_policy = greedy_Policy(values)
+
+>>>>>>> Stashed changes
 # values, sync_iteration = compute_state_value(max_iter=5, policy = greedy_policy)
 # greedy_policy = greedy_Policy(values)
 # values, sync_iteration = compute_state_value(max_iter=5, policy = greedy_policy)
 # greedy_policy = greedy_Policy(values)
 
+<<<<<<< Updated upstream
 
 np.save("simple_case_policy.npy", greedy_policy)
 print(123)
+=======
+# np.save(f'greedy_policy_iter{sync_iteration}', greedy_policy)
+
+# plt.matshow(greedy_policy[:, :, 95, 1])
+# plt.show()
+>>>>>>> Stashed changes
