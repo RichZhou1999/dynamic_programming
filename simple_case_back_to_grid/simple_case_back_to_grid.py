@@ -165,10 +165,10 @@ from tqdm import tqdm
 from simple_charge_back_to_grid_env import Simple_charge_back_to_grid_env
 charge_env = Simple_charge_back_to_grid_env()
 
-policy0 = charge_env.actions_prob * np.ones((charge_env.state_size_delta_soc, charge_env.state_size_delta_time, charge_env.state_size_time, charge_env.action_size))
-num_iteration = 10
+policy = charge_env.actions_prob * np.ones((charge_env.state_size_delta_soc, charge_env.state_size_delta_time, charge_env.state_size_time, charge_env.action_size))
+num_iteration = 3
 for i in tqdm(range(num_iteration)):
-    values, sync_iteration = charge_env.compute_state_value(max_iter=40, discount = 1,policy = policy0)
+    values, sync_iteration = charge_env.compute_state_value(max_iter=40, discount = 1,policy = policy)
     policy = charge_env.greedy_Policy(values)
 
 np.save(f'simple_greedy_policy_iter{num_iteration}', policy)

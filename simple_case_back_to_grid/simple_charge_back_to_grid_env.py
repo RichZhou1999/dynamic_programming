@@ -75,11 +75,13 @@ class Simple_charge_back_to_grid_env():
             action = 1
 
         if action == 0:
-            reward = action * self.price_curve[state[2]] * 0.85
+            reward = self.delta_soc_interval * self.price_curve[state[2]] * 0.85
+            # reward = action * self.price_curve[state[2]] * 0.85
         elif action == 1:
             reward = 0
         else:
-            reward = - action * self.price_curve[state[2]]
+            reward = -self.delta_soc_interval * self.price_curve[state[2]]
+            # reward = - action * self.price_curve[state[2]]
 
         new_state[0] = np.round(new_state[0], 2)
         done = False

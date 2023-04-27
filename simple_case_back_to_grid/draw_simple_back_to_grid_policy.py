@@ -1,6 +1,6 @@
 import numpy as np
 from simple_charge_back_to_grid_env import Simple_charge_back_to_grid_env
-policy = np.load('simple_greedy_policy_iter10.npy')
+policy = np.load('simple_greedy_policy_iter3.npy')
 
 
 # state = [0.8, 47,0]
